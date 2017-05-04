@@ -28,27 +28,27 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author pantelispanka
  */
 @Entity
-@Table(name = "user_inf")
+@Table(name = "user_inf", catalog = "miners", schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UserInf.findAll", query = "SELECT u FROM UserInf u")
     , @NamedQuery(name = "UserInf.findById", query = "SELECT u FROM UserInf u WHERE u.id = :id")
-    , @NamedQuery(name = "UserInf.findByUserName", query = "SELECT u FROM UserInf u WHERE u.userName = :userName")
-    , @NamedQuery(name = "UserInf.findByDateUpdated", query = "SELECT u FROM UserInf u WHERE u.dateUpdated = :dateUpdated")})
+    , @NamedQuery(name = "UserInf.findByDateUpdated", query = "SELECT u FROM UserInf u WHERE u.dateUpdated = :dateUpdated")
+    , @NamedQuery(name = "UserInf.findByUserName", query = "SELECT u FROM UserInf u WHERE u.userName = :userName")})
 public class UserInf implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(nullable = false)
     private Integer id;
-    @Size(max = 80)
-    @Column(name = "user_name")
-    private String userName;
     @Column(name = "date_updated")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
+    @Size(max = 80)
+    @Column(name = "user_name", length = 80)
+    private String userName;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
     private MinersUsers userId;
@@ -68,20 +68,20 @@ public class UserInf implements Serializable {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public Date getDateUpdated() {
         return dateUpdated;
     }
 
     public void setDateUpdated(Date dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public MinersUsers getUserId() {

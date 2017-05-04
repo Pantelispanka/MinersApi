@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author pantelispanka
  */
 @Entity
-@Table(name = "user_role")
+@Table(name = "user_role", catalog = "miners", schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UserRole.findAll", query = "SELECT u FROM UserRole u")
@@ -39,12 +39,12 @@ public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 80)
-    @Column(name = "role")
+    @Column(nullable = false, length = 80)
     private String role;
     @OneToMany(mappedBy = "userRole")
     private Collection<MinersUsers> minersUsersCollection;

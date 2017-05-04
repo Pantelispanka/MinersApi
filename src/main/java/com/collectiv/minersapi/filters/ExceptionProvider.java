@@ -28,15 +28,26 @@ public class ExceptionProvider implements ExceptionMapper<Exception>{
         String excClassName = exc.getClass().getName();
         String[] excClass = excClassName.split("\\.");
         String excName = excClass[(excClass.length - 1)].toUpperCase();
+        
         switch(excName){
             case "BADREQUESTEXCEPTION": 
+                er.setStatus(400);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
                 er.setErrorMessage(exception.getMessage().toString());
                 return Response.status(Status.BAD_REQUEST).entity(er).build();
-
+            case "NOTAUTHORIZEDEXCEPTION":
+                er.setStatus(404);
+                er.setDevMessage(Arrays.toString(exception.getStackTrace()));
+                er.setErrorMessage(exception.getMessage().toString());
+                return Response.status(Status.UNAUTHORIZED).entity(er).build();
+            case "FORBIDDENEXCEPTION":
+                er.setStatus(403);
+                er.setDevMessage(Arrays.toString(exception.getStackTrace()));
+                er.setErrorMessage(exception.getMessage().toString());
+                return Response.status(Status.FORBIDDEN).entity(er).build();
 
         }
-        
+        er.setStatus(500);
         er.setDevMessage(Arrays.toString(exception.getStackTrace()));
         er.setErrorMessage("Unknown Error");
         return Response.status(Status.INTERNAL_SERVER_ERROR).entity(er).build();

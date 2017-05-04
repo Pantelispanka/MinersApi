@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,8 +26,9 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author pantelispanka
  */
+//@Embeddable
 @Entity
-@Table(name = "item_status")
+@Table(name = "item_status", catalog = "miners", schema = "public")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ItemStatus.findAll", query = "SELECT i FROM ItemStatus i")
@@ -38,10 +40,10 @@ public class ItemStatus implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(nullable = false)
     private Integer id;
     @Size(max = 80)
-    @Column(name = "status")
+    @Column(length = 80)
     private String status;
     @OneToMany(mappedBy = "itemStatus")
     private Collection<MinersUsers> minersUsersCollection;

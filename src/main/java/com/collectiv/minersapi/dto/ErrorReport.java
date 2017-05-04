@@ -12,7 +12,7 @@ package com.collectiv.minersapi.dto;
 public class ErrorReport {
     
 //    private Integer errorId;
-//    private Integer status;
+    private Integer status;
     private String errorMessage;
     private String DevMessage;
 
@@ -24,13 +24,13 @@ public class ErrorReport {
 //        this.errorId = errorId;
 //    }
 //
-//    public Integer getStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(Integer status) {
-//        this.status = status;
-//    }
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getErrorMessage() {
         return errorMessage;

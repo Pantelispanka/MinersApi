@@ -5,11 +5,13 @@
  */
 package com.collectiv.minersapi;
 
+import com.collectiv.minersapi.api.ApplicationDetailsApi;
 import com.collectiv.minersapi.api.AuthenticationApi;
 import com.collectiv.minersapi.api.UsersApi;
 import com.collectiv.minersapi.filters.CorsRequestFilter;
 import com.collectiv.minersapi.filters.CorsResponseFilter;
 import com.collectiv.minersapi.filters.ExceptionProvider;
+import com.collectiv.minersapi.filters.TokenRequestFilter;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
@@ -45,15 +47,18 @@ public class ApplicationMiners extends Application {
 
         resources.add(UsersApi.class);
         resources.add(AuthenticationApi.class);
+        resources.add(ApplicationDetailsApi.class);
 
         resources.add(SwaggerSerializers.class);
         resources.add(ApiListingResource.class);
         
         resources.add(CorsRequestFilter.class);
         resources.add(CorsResponseFilter.class);
+        
+        resources.add(TokenRequestFilter.class);
 
         resources.add(ExceptionProvider.class);
-        
+                
         return resources;
 
     }

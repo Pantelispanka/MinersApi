@@ -7,11 +7,17 @@ package com.collectiv.minersapi.api;
 
 import com.collectiv.minersapi.db.handlers.PasswordHandler;
 import com.collectiv.minersapi.db.models.UserPasswords;
+import com.collectiv.minersapi.dto.ApiKey;
 import com.collectiv.minersapi.dto.Credentials;
+import com.collectiv.minersapi.dto.ErrorReport;
 import com.collectiv.minersapi.facade.AuthenticationFacade;
 import com.collectiv.minersapi.filters.ApplicationException;
+import com.collectiv.minersapi.filters.RoleEnum;
+import com.collectiv.minersapi.filters.TokenSecured;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
@@ -48,22 +54,20 @@ public class AuthenticationApi {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Authenticates user and returns an api key", responseContainer = "List")
-//    @ApiResponses(code = '200', )
-    public Response authenticateUser(Credentials credentials) {
-        String mpla;
-        try {
-            mpla = authenticationFacade.UserAuthentication(credentials);
-
-        }catch(Exception e){
-            throw new BadRequestException(e);
-        }
-        return Response.ok(mpla).build();
+    @ApiResponses(value = { @ApiResponse(code = 200 , message = "User Authenticated", response = ApiKey.class),
+            @ApiResponse(code = 400 , message = "Wrong Credentials", response = ErrorReport.class),
+            @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)} )
+    public Response authenticateUser(Credentials credentials) throws BadRequestException{
+        ApiKey apiKey = new ApiKey();        
+        apiKey = authenticationFacade.UserAuthentication(credentials); 
+        return Response.ok(apiKey).build();
     }
     
     @GET
     @Path("/userpasswords")
     @Produces("application/json")
     @ApiOperation(value = "Returns all user passwords", responseContainer = "List")
+    @TokenSecured({RoleEnum.ADMNISTRATOR})
     public Response getAllPasswords(){
         List<UserPasswords> pass = passHandler.getAllPasswords();
         return Response.ok(pass).build();
@@ -73,19 +77,11 @@ public class AuthenticationApi {
     @Path("/password/{id}")
     @Produces("application/json")
     @ApiOperation(value = "Returns a password by id")
-    public Response getAllPasswords(@PathParam("id") int id) throws BadRequestException{
-        UserPasswords pass = new UserPasswords();
-        pass = passHandler.getPassword(id);
+    @TokenSecured({RoleEnum.ADMNISTRATOR})
+    public Response getPasswordById(@PathParam("id") int id) throws BadRequestException{
+        UserPasswords pass = passHandler.getPassword(id);
         return Response.ok().entity(pass).build();
     }
 
     
-    @GET
-    @Path("/errorhandling")
-    @Produces("application/json")
-    @ApiOperation(value = "Returns custom error")
-    public Response getError() throws ApplicationException{
-        Exception e = new BadRequestException();
-        throw new ApplicationException("Exception with custom message", e);
-    }
 }
